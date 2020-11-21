@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  api:
+    build: ./notekeeper-api
+    container_name: notekeeper-api
+    ports:
+      - 2222:2222
+    environment:
+      MYSQL_DB_HOST: db
+      MYSQL_DB_PORT: 3333
+      MYSQL_DB_USER: root
+      MYSQL_DB_PASSWORD: ""
+      MYSQL_DB_DATABASE: notekeeper
+    volumes:
+      - ./notekeeper-api/src:/app/src
