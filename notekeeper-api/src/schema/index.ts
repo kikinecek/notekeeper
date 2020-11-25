@@ -14,8 +14,19 @@ import {
 } from "./AuthSchema"
 
 import {
+  StoredFile,
+
   uploadMidiFile
 } from "./FileSchema";
+
+import {
+  MidiRecord,
+  MidiRecordInput,
+
+  storeMidiRecord,
+  updateMidiRecord,
+  deleteMidiRecord
+} from "./MidiRecordSchema";
 
 import {
   User,
@@ -36,6 +47,10 @@ const mutationType = new GraphQLObjectType({
   fields: () => ({
     uploadMidiFile,
 
+    deleteMidiRecord,
+    updateMidiRecord,
+    storeMidiRecord,
+
     signIn,
     signOut,
     signUp
@@ -46,7 +61,12 @@ const possibleTypes = [
   UserSignIn,
   UserSignUp,
   SignInResult,
-  User
+  User,
+
+  MidiRecordInput,
+  MidiRecord,
+
+  StoredFile
 ]
 
 const schema: GraphQLSchema = new GraphQLSchema({
