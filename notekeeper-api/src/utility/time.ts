@@ -1,5 +1,1 @@
-const HALF_HOUR = 1000 * 60 * 30;
-
-export {
-  HALF_HOUR
-}
+export const HALF_HOUR = 1000 * 60 * 30;

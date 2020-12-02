@@ -25,7 +25,9 @@ import {
 
   storeMidiRecord,
   updateMidiRecord,
-  deleteMidiRecord
+  deleteMidiRecord,
+
+  updateMidiRecordRating
 } from "./MidiRecordSchema";
 
 import {
@@ -50,6 +52,8 @@ const mutationType = new GraphQLObjectType({
     deleteMidiRecord,
     updateMidiRecord,
     storeMidiRecord,
+
+    updateMidiRecordRating,
 
     signIn,
     signOut,

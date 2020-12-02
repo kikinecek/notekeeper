@@ -1,16 +1,10 @@
-import {
-  FileUpload
-} from "graphql-upload";
+import { FileUpload } from "graphql-upload";
 
-import {
-  signedIn
-} from "../middleware/sessionState";
+import { signedIn } from "../middleware/sessionState";
 
-import {
-  User
-} from "../model/user/types";
+import { User } from "../model/user/types";
 
-import fileService from "../service/FileService";
+import * as FileService from "../service/FileService";
 
 const uploadMidiFile = async ({ file }: { file: Promise<FileUpload> }, { user }: { user: User }) => {
   const {
@@ -28,7 +22,7 @@ const uploadMidiFile = async ({ file }: { file: Promise<FileUpload> }, { user }:
       size += chunk.length;
     })
     .on("end", async () => {
-        fileId = await fileService.storeFile(
+        fileId = await FileService.storeFile(
         {
           ...restFile,
           content,

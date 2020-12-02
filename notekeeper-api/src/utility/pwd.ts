@@ -1,9 +1,7 @@
 import crypto from "crypto";
 import config from "../config";
 
-import { Password } from "../model/auth/types";
-
-const hashPassword = async (password: string, salt?: string): Promise<[string, string]> => {
+export const hashPassword = async (password: string, salt?: string): Promise<[string, string]> => {
   const { PWD: { pepper } } = config;
 
   const saltForHash = salt || crypto.randomBytes(128).toString('base64');
@@ -22,7 +20,7 @@ const hashPassword = async (password: string, salt?: string): Promise<[string, s
   return [ hash, saltForHash ];
 }
 
-const validatePassword = async (password: string, hashedPassword: string, salt: string) => {
+export const validatePassword = async (password: string, hashedPassword: string, salt: string) => {
   const [ hash ] = await hashPassword(password, salt);
 
   if (hash === hashedPassword) {
@@ -30,9 +28,4 @@ const validatePassword = async (password: string, hashedPassword: string, salt: 
   }
 
   return false;
-}
-
-export {
-  hashPassword,
-  validatePassword
 }

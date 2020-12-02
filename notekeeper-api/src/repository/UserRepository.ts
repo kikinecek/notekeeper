@@ -5,10 +5,10 @@ import { query } from "../db"
 import { UserSignUp } from "../model/auth/types"
 import { serializeUserSignUp } from "../model/auth/functions"
 
-import { User } from "../model/user/types";
+import { User, UserInput } from "../model/user/types";
 import { deserializeUser } from "../model/user/functions";
 
-const createUser = async (connection: PoolConnection, data: UserSignUp): Promise<number> => {
+export const createUser = async (connection: PoolConnection, data: UserSignUp): Promise<number> => {
   const insertData = serializeUserSignUp(data);
 
   const { insertId } = await query(
@@ -20,7 +20,7 @@ const createUser = async (connection: PoolConnection, data: UserSignUp): Promise
   return insertId;
 }
 
-const findUserById = async (connection: PoolConnection, userId: number): Promise<User> => {
+export const findUserById = async (connection: PoolConnection, userId: number): Promise<User> => {
   const [ result ]  = await query(
     connection,
     `
@@ -42,7 +42,7 @@ const findUserById = async (connection: PoolConnection, userId: number): Promise
   return deserializeUser(result);
 }
 
-const findUserByEmail = async (connection: PoolConnection, email: string): Promise<User> => {
+export const findUserByEmail = async (connection: PoolConnection, email: string): Promise<User> => {
   const [ result ]  = await query(
     connection,
     `
@@ -64,7 +64,7 @@ const findUserByEmail = async (connection: PoolConnection, email: string): Promi
   return deserializeUser(result);
 }
 
-const updateUser = async (connection: PoolConnection, data: User) => {
+export const updateUser = async (connection: PoolConnection, data: UserInput) => {
   await query(
     connection,
     `
@@ -83,12 +83,3 @@ const updateUser = async (connection: PoolConnection, data: User) => {
     ]
   )
 }
-
-const UserRepository = {
-  createUser,
-  findUserById,
-  findUserByEmail,
-  updateUser
-}
-
-export default UserRepository;

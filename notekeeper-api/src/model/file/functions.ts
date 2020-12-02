@@ -1,7 +1,8 @@
 import {
-  FileDeserialized,
   FileInputExtended,
-  FileInputExtendedSerialized
+  FileInputExtendedSerialized,
+  MidiRecordMidiFile,
+  FileDeserialized
 } from "./types";
 
 export const serializeFileInput = ({
@@ -16,4 +17,22 @@ export const serializeFileInput = ({
   encoding,
   size,
   content
+})
+
+export const deserializeMidiRecordMidiFile = ({
+  midiFileId,
+  midiFileName,
+  midiFileMimeType,
+  midiFileEncoding,
+  midiFileSize,
+  midiFileContent,
+  midiFileCreatedAt
+}: MidiRecordMidiFile): FileDeserialized => ({
+  id: midiFileId,
+  name: midiFileName,
+  mimeType: midiFileMimeType,
+  encoding: midiFileEncoding,
+  size: midiFileSize,
+  content: midiFileContent,
+  createdAt: new Date(midiFileCreatedAt)
 })

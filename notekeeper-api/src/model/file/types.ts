@@ -7,7 +7,7 @@ export interface FileInput {
 export interface FileInputExtended extends FileInput {
   size: number,
   content: string
-}
+};
 
 export interface FileInputExtendedSerialized {
   name: string,
@@ -15,7 +15,7 @@ export interface FileInputExtendedSerialized {
   encoding: string,
   size: number,
   content?: string
-}
+};
 
 export type FileDeserialized = {
   id: number,
@@ -26,4 +26,15 @@ export type FileDeserialized = {
   size: number,
   content?: string,
   createdAt: Date,
+};
+
+export type MidiRecordMidiFile = {
+  midiFileId: number,
+  // creatorId: number,
+  midiFileName: string,
+  midiFileMimeType: string,
+  midiFileEncoding: string,
+  midiFileSize: number,
+  midiFileContent?: string,
+  midiFileCreatedAt: string,
 };

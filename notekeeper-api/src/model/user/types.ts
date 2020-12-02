@@ -6,6 +6,8 @@ interface User {
   createdAt: Date
 }
 
+type UserInput = Omit<User, "createdAt">;
+
 interface UserSerialized {
   id: number,
   first_name?: string,
@@ -17,5 +19,6 @@ interface UserSerialized {
 
 export {
   User,
-  UserSerialized
+  UserSerialized,
+  UserInput
 }

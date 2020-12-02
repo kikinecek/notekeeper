@@ -7,9 +7,7 @@ import {
   GraphQLFieldConfig
 } from "graphql";
 
-import {
-  User
-} from "./UserSchema";
+import { User } from "./UserSchema";
 
 const emailNonNullField = {
   type: GraphQLNonNull(GraphQLString),

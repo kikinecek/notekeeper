@@ -7,9 +7,7 @@ import {
   GraphQLObjectType
 } from "graphql";
 
-import {
-  GraphQLUpload
-} from "graphql-upload";
+import { GraphQLUpload } from "graphql-upload";
 
 export const StoredFile = new GraphQLObjectType({
   name: "StoredFile",

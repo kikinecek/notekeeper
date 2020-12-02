@@ -1,10 +1,6 @@
-import {
-  PoolConnection
-} from "mysql";
+import { PoolConnection } from "mysql";
 
-import {
-  query
-} from "../db";
+import { query } from "../db";
 
 import {
   MidiRecord,
@@ -16,61 +12,90 @@ import {
     deserializeMidiRecord
 } from "../model/midiRecord/functions";
 
-const storeMidiRecord = async (connection: PoolConnection, userId: number, midiRecord: MidiRecordInput): Promise<number> => {
-  const inserData = serializeMidiRecordInput(midiRecord);
+import * as FileRepository from "./FileRepository";
+
+export const storeMidiRecord = async (
+  connection: PoolConnection,
+  userId: number,
+  midiRecord: MidiRecordInput,
+  ratingId: number
+): Promise<number> => {
+  const insertData = {
+    ...serializeMidiRecordInput(midiRecord),
+    rating_id: ratingId
+  }
 
   const { insertId } = await query(
     connection,
     'INSERT INTO midi_record SET ?',
-    inserData
+    insertData
   )
 
   return insertId;
 }
 
-const updateMidiRecord = async (connection: PoolConnection, midiRecord: MidiRecordInput): Promise<void> => {
-  const insertData = serializeMidiRecordInput(midiRecord);
-
+export const updateMidiRecord = async (
+  connection: PoolConnection,
+  midiRecordId: number,
+  {
+    name,
+    midiFileId,
+    genre,
+    isPublic
+  }: MidiRecordInput
+): Promise<void> => {
   await query(
     connection,
-    'UPDATE midi_record SET ?',
-    insertData
+    `
+      UPDATE midi_record
+      SET
+        name = ?,
+        midi_file_id = ?,
+        genre = ?,
+        is_public = ?
+      WHERE ?
+      `,
+      [
+        name,
+        midiFileId,
+        genre,
+        isPublic,
+        midiRecordId
+      ]
   )
 }
 
-const deleteMidiRecord = async (connection: PoolConnection, midiRecordId: number): Promise<void> => {
-  await query(
+export const deleteMidiRecord = async (connection: PoolConnection, midiRecordId: number): Promise<void> => {
+  const [{ midiFileId }] = await query(
     connection,
-    'DELETE FROM midi_record WHERE midi_record_id = ?',
+    `
+      SELECT midi_file_id AS midiFileId
+      FROM midi_record
+      WHERE id = ?
+    `,
     [
       midiRecordId
     ]
   )
+  
+  await query(
+    connection,
+    'DELETE FROM midi_record WHERE id = ?',
+    [
+      midiRecordId
+    ]
+  )
+
+  await FileRepository.deleteFile(connection, midiFileId);
 }
 
-const findMidiRecordById = async (connection: PoolConnection, midiRecordId: number): Promise<MidiRecord> => {
+export const findMidiRecordById = async (connection: PoolConnection, midiRecordId: number): Promise<MidiRecord> => {
   const [ result ] = await query(
     connection, 
     `
-      SELECT
-        mr.id AS id,
-        mr.name AS name,
-        mr.is_public AS isPublic,
-        mr.rating AS rating,
-        mr.view_count AS viewCount,
-        mr.genre AS genre,
-        mr.created_at AS midiFileCreatedAt,
-        f.id AS midiFileId,
-        f.name AS midiFileName,
-        f.mime_type AS midiFileMimeType,
-        f.encoding AS midiFileEncoding,
-        f.size AS midiFileSize,
-        f.content AS midiFileContent,
-        f.created_at AS midiFileCreatedAt
-      FROM midi_record mr
-      JOIN file f
-        ON mr.midi_file_id = f.id
-      WHERE mr.id = ?
+      SELECT *
+      FROM MidiRecords
+      WHERE id = ?
       LIMIT 1
     `,
     [
@@ -80,13 +105,3 @@ const findMidiRecordById = async (connection: PoolConnection, midiRecordId: numb
   
   return deserializeMidiRecord(result);
 }
-
-const MidiRecordRepository = {
-  storeMidiRecord,
-  updateMidiRecord,
-  deleteMidiRecord,
-
-  findMidiRecordById
-}
-
-export default MidiRecordRepository;

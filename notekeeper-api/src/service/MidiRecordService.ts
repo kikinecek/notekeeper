@@ -1,22 +1,21 @@
-import {
-  connect
-} from "../db";
+import { connect } from "../db";
 
 import {
   MidiRecord,
   MidiRecordInput
 } from "../model/midiRecord/types";
 
-import {
-  User
-} from "../model/user/types";
+import { User } from "../model/user/types";
 
-import MidiRecordRepository from "../repository/MidiRecordRepository";
+import * as RatingRepository from "../repository/RatingRepository";
+import * as MidiRecordRepository from "../repository/MidiRecordRepository";
 
-const storeMidiRecord = async (midiRecord: MidiRecordInput, user: User): Promise<MidiRecord> => 
+export const storeMidiRecord = async (user: User, midiRecord: MidiRecordInput): Promise<MidiRecord> => 
   await connect(async (connection) => {
     try {
-      const midiRecordId = await MidiRecordRepository.storeMidiRecord(connection, user.id, midiRecord)
+      const ratingId = await RatingRepository.initializeRating(connection);
+
+      const midiRecordId = await MidiRecordRepository.storeMidiRecord(connection, user.id, midiRecord, ratingId);
   
       return await MidiRecordRepository.findMidiRecordById(connection, midiRecordId);
     } catch (err) {
@@ -26,20 +25,25 @@ const storeMidiRecord = async (midiRecord: MidiRecordInput, user: User): Promise
     }
   })
 
-const updateMidiRecord = async (midiRecord: MidiRecordInput, user: User) => 
+export const updateMidiRecord = async (user: User, midiRecordId: number, midiRecord: MidiRecordInput) => 
   await connect(async (connection) => {
-    await MidiRecordRepository.updateMidiRecord(connection, midiRecord);
+    try {
+      await MidiRecordRepository.updateMidiRecord(connection, midiRecordId, midiRecord);
+
+      return await MidiRecordRepository.findMidiRecordById(connection, midiRecordId);
+    } catch (err) {
+
+    }
   })
 
-const deleteMidiRecord = async (midiRecordId: number, user: User) => 
+export const deleteMidiRecord = async (midiRecordId: number, user: User) => 
   await connect(async (connection) => {
     await MidiRecordRepository.deleteMidiRecord(connection, midiRecordId)
   })
 
-const MidiRecordService = {
-  storeMidiRecord,
-  updateMidiRecord,
-  deleteMidiRecord
-}
+export const updateMidiRecordRating = async (user: User, ratingId: number, rating: number) => 
+  await connect(async (connection) => {
+    await RatingRepository.updateRating(connection, ratingId, rating);
 
-export default MidiRecordService;
+    return await RatingRepository.findRatingById(connection, ratingId);
+  })

@@ -2,13 +2,11 @@ import { PoolConnection } from "mysql"
 
 import { UserSignIn, SignInResult } from "../model/auth/types";
 
-import AuthRepository from "../repository/AuthRepository";
-import UserRepository from "../repository/UserRepository";
+import * as AuthRepository from "../repository/AuthRepository";
+import * as UserRepository from "../repository/UserRepository";
 
 import { hashPassword, validatePassword } from "../utility/pwd";
-import {
-  generateSessionToken
-} from "../middleware/session";
+import { generateSessionToken } from "../middleware/session";
 
 const createPassword = async (connection: PoolConnection, userId: number, password: string): Promise<void> => {
   const [ hash, salt ] = await hashPassword(password);

@@ -9,9 +9,9 @@ import {
   GraphQLInt
 } from "graphql";
 
-import {
-  StoredFile
-} from "./FileSchema";
+import { StoredFile } from "./FileSchema";
+
+import { Rating } from "./BasicSchema";
 
 export const MidiRecordInput = new GraphQLInputObjectType({
   name: "MidiRecordStoreInput",
@@ -59,6 +59,14 @@ export const MidiRecord = new GraphQLObjectType({
     genre: {
       type: GraphQLString,
       description: "Song's genre"
+    },
+    rating: {
+      type: GraphQLNonNull(Rating),
+      description: "Rating of midi racord"
+    },
+    createdAt: {
+      type: GraphQLNonNull(GraphQLString),
+      description: "Date when midi record has been created"
     }
   })
 }); 
@@ -79,6 +87,9 @@ export const updateMidiRecord: GraphQLFieldConfig<any,any> = {
   args: {
     data: {
       type: GraphQLNonNull(MidiRecordInput)
+    },
+    midiRecordId: {
+      type: GraphQLInt
     }
   }
 }
@@ -89,6 +100,20 @@ export const deleteMidiRecord: GraphQLFieldConfig<any,any> = {
   args: {
     midiRecordId : {
       type: GraphQLNonNull(GraphQLID)
+    }
+  }
+}
+
+export const updateMidiRecordRating: GraphQLFieldConfig<any,any> = {
+  type: GraphQLNonNull(Rating),
+  description: "Updates rating of midi record",
+  args: {
+    ratingId: {
+      type: GraphQLNonNull(GraphQLID)
+    },
+    rating: {
+      type: GraphQLNonNull(GraphQLInt), 
+      description: "User's rating in range 1 to 5"
     }
   }
 }

@@ -5,6 +5,8 @@ import {
   MidiRecordInputSerialized
 } from "./types";
 
+import { deserializeMidiRecordMidiFile } from "../file/functions";
+import { deserializeMidiRecordRating } from "../rating/functions";
 
 export const serializeMidiRecordInput = ({
   name,
@@ -24,30 +26,48 @@ export const deserializeMidiRecord = ({
   isPublic,
   genre,
   createdAt,
-  rating,
   viewCount,
+
   midiFileId,
   midiFileName,
   midiFileEncoding,
   midiFileMimeType,
   midiFileContent,
   midiFileCreatedAt,
-  midiFileSize
+  midiFileSize,
+  
+  ratingId,
+  ratingOneStarCount,
+  ratingTwoStarCount,
+  ratingThreeStarCount,
+  ratingFourStarCount,
+  ratingFiveStarCount,
+  rating,
+  ratingCreatedAt
 }: MidiRecordSerialized): MidiRecord => ({
   id,
   name,
   genre,
   createdAt: new Date(createdAt),
   isPublic,
-  rating,
   viewCount,
-  midiFile: {
-    id: midiFileId,
-    name: midiFileName,
-    encoding: midiFileEncoding,
-    mimeType: midiFileMimeType,
-    content: midiFileContent,
-    createdAt: new Date(midiFileCreatedAt),
-    size: midiFileSize
-  }
+  midiFile: deserializeMidiRecordMidiFile({
+    midiFileId,
+    midiFileName,
+    midiFileEncoding,
+    midiFileMimeType,
+    midiFileContent,
+    midiFileCreatedAt,
+    midiFileSize,
+  }),
+  rating: deserializeMidiRecordRating({
+    ratingId,
+    ratingOneStarCount,
+    ratingTwoStarCount,
+    ratingThreeStarCount,
+    ratingFourStarCount,
+    ratingFiveStarCount,
+    rating,
+    ratingCreatedAt
+  })
 })

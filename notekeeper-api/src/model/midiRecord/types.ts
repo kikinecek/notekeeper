@@ -1,6 +1,6 @@
-import {
-  FileDeserialized
-} from "../file/types";
+import { FileDeserialized, MidiRecordMidiFile } from "../file/types";
+
+import { Rating, MidiRecordRating } from "../rating/types";
 
 export interface MidiRecordInputSerialized {
   name: string;
@@ -16,22 +16,13 @@ export interface MidiRecordInput {
   isPublic: boolean;
 }
 
-export interface MidiRecordSerialized {
+export interface MidiRecordSerialized extends MidiRecordRating, MidiRecordMidiFile {
   id: number;
   name: string;
   genre?: string;
   isPublic: boolean;
-  rating: number;
   viewCount: number;
   createdAt: string;
-  
-  midiFileId: number;
-  midiFileName: string;
-  midiFileMimeType: string;
-  midiFileEncoding: string;
-  midiFileSize: number;
-  midiFileContent?: string;
-  midiFileCreatedAt: string;
 }
 
 export interface MidiRecord {
@@ -39,8 +30,8 @@ export interface MidiRecord {
   name: string;
   midiFile: FileDeserialized;
   genre?: string;
-  rating: number;
   viewCount: number;
   isPublic: boolean;
+  rating: Rating;
   createdAt: Date;
 }

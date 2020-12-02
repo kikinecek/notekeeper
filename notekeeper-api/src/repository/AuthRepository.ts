@@ -4,7 +4,7 @@ import { query } from "../db"
 
 import { Password } from "../model/auth/types";
 
-const createPassword = async (connection: PoolConnection, userId: number, salt: string, password: string): Promise<number> => {
+export const createPassword = async (connection: PoolConnection, userId: number, salt: string, password: string): Promise<number> => {
   const { insertId } = await query(
     connection,
     "INSERT INTO password SET user_id = ?, salt = ?, pwd = ?",
@@ -18,7 +18,7 @@ const createPassword = async (connection: PoolConnection, userId: number, salt: 
   return insertId;
 }
 
-const updatePassword = async (connection: PoolConnection, userId: number, salt: string, password: string) => { 
+export const updatePassword = async (connection: PoolConnection, userId: number, salt: string, password: string) => { 
   const { insertId } = await query(
     connection,
     "UPDATE password SET pwd = ?, salt = ? WHERE user_id = ?",
@@ -32,7 +32,7 @@ const updatePassword = async (connection: PoolConnection, userId: number, salt: 
   return insertId;
 }
 
-const findPasswordByUserId = async (connection: PoolConnection, userId: number): Promise<Password> => {
+export const findPasswordByUserId = async (connection: PoolConnection, userId: number): Promise<Password> => {
   const [ result ] = await query(
     connection,
     `
@@ -48,12 +48,3 @@ const findPasswordByUserId = async (connection: PoolConnection, userId: number):
 
   return result;
 }
-
-
-const AuthRepository = {
-  createPassword,
-  findPasswordByUserId,
-  updatePassword
-}
-
-export default AuthRepository;
